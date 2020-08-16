@@ -4,12 +4,11 @@ const App = () => (<Counter></Counter>)
 
 class Counter extends Component {
   constructor(props) {
-    super(props) // 親クラスで初期化
+    super(props)
     this.state = { count: 0 }
   }
 
   handlePlusButton = () => {
-    // setStateで状態変更とDOMが再描画される（renderが実行される）
     this.setState({ count: this.state.count + 1 })
   }
 
