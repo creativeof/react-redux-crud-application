@@ -1,18 +1,17 @@
-// export const increment = () => {
-//   return {
-//     type: 'INCREMENT'
-//   }
-// }
+import axios from 'axios'
 
 // exportしてReducerでもimportできるようにする
-export const INCREMENT = 'INCREMENT'
-export const DECREMENT = 'DECREMENT'
+export const READ_EVENTS = 'READ_EVENTS'
 
-// exportしてviewを担当するComponentでimportできるようにする
-export const increment = () => ({
-  type: INCREMENT
-})
+const ROOT_URL = 'https://udemy-utils.herokuapp.com/api/v1'
+const QUERYSTRING = '?token=token123'
 
-export const decrement = () => ({
-  type: DECREMENT
-})
+
+// redux-thunkで関数を変えることができるようになる
+// async awaitを使って戻り値を非同期にする
+// responseを含めたactionをdespatchでreducerに渡していく
+export const readEvents = () => async dispatch => {
+  const response = await axios.get(`${ROOT_URL}/events${QUERYSTRING}`)
+  console.log(response)
+  dispatch({type: READ_EVENTS, response })
+}
