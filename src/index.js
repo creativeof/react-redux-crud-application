@@ -1,13 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+
 import './index.css';
-import App from './App';
+import reducer from './reducers'
+
+import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
+// このstoreはアプリケーション内部で唯一のものになる
+// （すべてのstateはこのstoreに集約）
+const store = createStore(reducer)
+
+// このstoreをアプリケーション内のどのComoponentからも参照できるようにProviderを使用
 ReactDOM.render(
-  <React.StrictMode>
+  <Provider store={store}>
     <App />
-  </React.StrictMode>,
+  </Provider>,
   document.getElementById('root')
 );
 
