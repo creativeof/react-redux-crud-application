@@ -1,11 +1,24 @@
 import _ from 'lodash'
 import {
+  CREATE_EVENT,
   READ_EVENTS,
   DELETE_EVENT,
+  UPDATE_EVENT,
+  READ_EVENT,
 } from '../actions'
 
 export default (events = {}, action) => {
   switch (action.type) {
+    case CREATE_EVENT:
+    case READ_EVENT:
+    case UPDATE_EVENT:
+      // console.log(action.response.data)
+      // {"id":1,"title":"Let's have an event 1!","body":"This is the body for event 1."}
+
+    　const data = action.response.data
+      // スプレッド演算子でeventsのオブジェクトを全部展開して、
+      // [data.id]をキーにしたdataというオブジェクトで上書きした情報を渡す
+      return { ...events, [data.id]: data }
     case READ_EVENTS:
       // console.log(action.response.data)
       // [

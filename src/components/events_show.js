@@ -14,6 +14,12 @@ class EventsShow extends Component {
     this.onDeleteClick = this.onDeleteClick.bind(this)
   }
 
+  componentDidMount() {
+    const {id} = this.props.match.params
+    if (id) this.props.getEvent(id) // getEventはActionから引っ張ってくるアクション
+  }
+
+
   renderField(field) {
     const { input, label, type, meta: { touched, error } } = field
     // 一回でもフォームに触ったらtouched状態になる
@@ -40,16 +46,17 @@ class EventsShow extends Component {
 
   // 非同期処理
   async onSubmit(values) {
-    // await this.props.postEvent(values)
+    await this.props.putEvent(values)
     // 履歴にトップページをpush（トップページに遷移する）
     this.props.history.push('/')
   }
 
   render() {
     // handleSubmit関数はrenderが実行されたときに渡ってくるのでここで取得
-    // pristine 何も入力してない状態を示す属性
-    // submitting submitボタンが押されたらtrueになる
-    const { handleSubmit, pristine, submitting } = this.props
+    // pristine: 何も入力してない状態を示す属性
+    // submitting: submitボタンが押されたらtrueになる
+    // invalid: バリデーションエラーがある場合
+    const { handleSubmit, pristine, submitting, invalid } = this.props
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -57,7 +64,7 @@ class EventsShow extends Component {
         <div><Field label="Body" name="body" type="text" component={this.renderField} /></div>
 
         <div>
-          <input type="submit" value="Submit" disabled={pristine || submitting} />
+          <input type="submit" value="Submit" disabled={pristine || submitting || invalid} />
           <Link to="/" >Cancel</Link>
           <Link to="/" onClick={this.onDeleteClick} >Delete</Link>
         </div>
@@ -76,12 +83,22 @@ const validate = values => {
   return errors
 }
 
-const mapDispatchToProps = ({ deleteEvent })
+// 現時点のstateとこのコンポーネントが持ってるpropsを引数で渡す
+const mapStateToProps = (state, ownProps) => {
+  const event = state.events[ownProps.match.params.id]
+
+  // 初期状態でどんな値を渡すかを設定
+  return { initialValues: event, state }
+}
+
+// コンポーネントに使用するEventをバインド
+const mapDispatchToProps = ({ deleteEvent, getEvent, putEvent })
 
 // connectでpostEventをバインドしてコンポーネントにActionを関連付ける
-// この画面ではeventsに関する描画しないのでmapStateToPropsは不要(null)
-export default connect(null, mapDispatchToProps)(
+// mapStateToProps: reducer側のイベント情報をバインド
+export default connect(mapStateToProps, mapDispatchToProps)(
   // reduxForm関数でデコレート
   //（reduxForm関数で返ってくる関数の引数にEventsNewを渡す）
-  reduxForm({ validate, form: 'eventShowForm' })(EventsShow)
+  reduxForm({ validate, form: 'eventShowForm', enableReinitialize: true })(EventsShow)
+  // enableReinitialize: trueにするとinitialValuesの値が変わる度にフォームが初期化される（指定がなければfalse）
 )

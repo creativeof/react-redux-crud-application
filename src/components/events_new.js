@@ -36,7 +36,7 @@ class EventsNew extends Component {
     // handleSubmit関数はrenderが実行されたときに渡ってくるのでここで取得
     // pristine 何も入力してない状態を示す属性
     // submitting submitボタンが押されたらtrueになる
-    const { handleSubmit, pristine, submitting } = this.props
+    const { handleSubmit, pristine, submitting, invalid } = this.props
 
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -44,7 +44,7 @@ class EventsNew extends Component {
         <div><Field label="Body" name="body" type="text" component={this.renderField} /></div>
 
         <div>
-          <input type="submit" value="Submit" disabled={pristine || submitting} />
+          <input type="submit" value="Submit" disabled={pristine || submitting || invalid} />
           <Link to="/" >Cancel</Link>
         </div>
       </form>
@@ -68,7 +68,8 @@ const mapDispatchToProps = ({ postEvent })
 // connectでpostEventをバインドしてコンポーネントにActionを関連付ける
 // この画面ではeventsに関する描画しないのでmapStateToPropsは不要(null)
 export default connect(null, mapDispatchToProps)(
-  // reduxForm関数でデコレート
-  //（reduxForm関数で返ってくる関数の引数にEventsNewを渡す）
+  // reduxForm関数でデコレート（デコレートしないとFieldコンポーネントは使えない）
+  // reduxForm関数で返ってくる関数の引数にEventsNewを渡す
+  // reduxForm関数の引数には設定に関するオブジェクトを渡す
   reduxForm({ validate, form: 'eventNewForm' })(EventsNew)
 )
