@@ -10,12 +10,14 @@ import { getEvent, deleteEvent, putEvent } from '../actions'
 class EventsShow extends Component {
 
   // イニシャライズしたときにonSubmitをバインドしてonSubmitのメソッドを使えるようにする
+  // DOM挿入前の初期化時に呼ばれる
   constructor(props) {
     super(props)
     this.onSubmit = this.onSubmit.bind(this)
     this.onDeleteClick = this.onDeleteClick.bind(this)
   }
 
+  // renderメソッドによるDOM挿入直後に呼ばれる
   componentDidMount() {
     const {id} = this.props.match.params
     if (id) this.props.getEvent(id) // getEventはActionから引っ張ってくるアクション
@@ -114,4 +116,8 @@ export default connect(mapStateToProps, mapDispatchToProps)(
   //（reduxForm関数で返ってくる関数の引数にEventsNewを渡す）
   reduxForm({ validate, form: 'eventShowForm', enableReinitialize: true })(EventsShow)
   // enableReinitialize: trueにするとinitialValuesの値が変わる度にフォームが初期化される（指定がなければfalse）
+  // 詳細画面に遷移した時はメモリ上にある該当のイベント情報をpropとして初期化される(古いイベント情報でいったん初期化される)
+  // componentDidMountのgetEventで該当のイベント情報を取りに行き、reducerがイベント情報を内部的に更新するが、
+  // trueにすることで、その更新によって再初期化をする設定になる。変更が発生する度に再初期化をしてくれる。
+  // falseだと他の人が更新した際に内部的には更新するが画面表示は古いまま
 )
