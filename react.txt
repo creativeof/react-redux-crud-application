@@ -1,0 +1,316 @@
+React・Reduxアプリケーション開発
+
+Nodeパッケージマネージャ
+Yarn: nvmより高速でより信頼度が高い
+
+インストール
+npm install --global yarn
+
+yarn --version
+
+GitHubリポジトリ作成
+Initialize this repository with a README にチェック
+.gitignoerはnodeを選択
+
+
+クローン
+git clone git@github.com:creativeof/react-redux-crud-application.git
+
+
+React ボイラープレート
+cerate-reaact-app
+（今まではReactを用いて開発する場合、Babelやwebpackなどのパッケージ手動でインストールする必要があった）
+
+インストール
+yarn global add create-react-app
+
+Reactアプリ作成
+git checkout -b hello-world
+現在のディレクトリに作成
+create-react-app ../現在のディレクトリ名
+create-react-app ../react-redux-crud-application
+
+READMEは戻す
+git checkout README.md
+rm README.old.md
+
+反映
+git add .
+
+bona@MacBook:~/Desktop/udemy/React/react-redux-crud-application (hello-world +)$ git status
+On branch hello-world
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+	modified:   .gitignore
+	new file:   package.json
+	new file:   public/favicon.ico
+	new file:   public/index.html
+	new file:   public/logo192.png
+	new file:   public/logo512.png
+	new file:   public/manifest.json
+	new file:   public/robots.txt
+	new file:   src/App.css
+	new file:   src/App.js
+	new file:   src/App.test.js
+	new file:   src/index.css
+	new file:   src/index.js
+	new file:   src/logo.svg
+	new file:   src/serviceWorker.js
+	new file:   src/setupTests.js
+	new file:   yarn.lock
+
+Reactアプリケーションを立ち上げる。起動
+yarn run start
+
+http://localhost:3000/
+
+停止
+control + c
+
+コミット
+git commit
+create app by create-react-app
+
+検索
+git grep "Learn React"
+
+
+git add .
+git diff --chached
+
+リモートにpush
+git push -u origin HEAD
+
+■自分専用のboilerplateの作成
+git checkout -b my-boilerplate
+
+git rm src/App.css
+
+
+React (Facebookが開発)
+WebアプリのUIを実装するためのJavaScriptライブラリ
+仮装DOMでDOMの変更箇所のみをレンダリングする機構を持っているため、非常に高速に動作する。
+DOMの変更箇所がどこなのか開発者が気にしなくてよい
+
+JSX (Facebookが開発)
+JavaScript XML
+JavaScriptを拡張したテンプレート言語
+Reactを用いてHTMLを出力する言語
+見た目がXMLやHTML風なので可読性が高い。直感的にHTMLを表現できる。
+
+アプリの内部で自動的にBabelがトランスファイルという処理をして、
+JavaScriptのコード(React.cerateElement())に変換される。
+
+JavaScriptの予約語とかぶるので class -> className for -> htmlFor
+JSXのreturnで返すタグは1つでなければならない。
+<React.Fragment>で囲う（不要なdivタグが出力されない）
+
+
+トランスパイラー
+BABEL
+https://babeljs.io/repl
+
+webpack
+https://webpack.js.org/
+モジュールバンドラー
+ソースコードを束ねてブラウザで実行できる静的なJavaScriptファイルを出力 → bundle.js
+HTMLではbundle.jsのみをscriptタグで指定すれば動作する。
+（アプリケーションの開発で様々なnpmパッケージを使用するには必須のツール）
+
+
+Component
+Reactの機能
+関数の定義によって作成する Functional Component
+クラス定義によって作成する Class Component
+
+props
+Componentの属性、変更不可能な値
+Component間のデータの受け渡し
+defaultProps
+
+prop-types
+propatiesに対する型チェックをするパッケージ
+
+ReactではバーチャルDOMが存在していて、どのDOMが変更になったかを管理してる。
+変更点のみを実際のDOMに反映していく。
+
+State
+Componentの内部でのみ使用される。変更可能な値
+Class Componentで使用できる機能
+
+
+Redux
+Fluxアーキテクチャの1つ
+Componentの階層が大きくなったときに容易に状態を共有する手段を提供
+
+パッケージのインストール
+yarn add redux react-redux
+
+Action (JavaScriptのオブジェクト)
+アプリケーションの中で何が起きたかを示すデータ
+オブジェクトの内部でtypeというキーとtypeに対応する値を特徴
+typeの値はユニークなものでなければならい。
+ActionCreator Actionを返す関数
+
+Reducer
+Actionが発生したときにそのActionに組み込まれているtypeに応じて
+状態をどう変化させるのかを定義する
+
+index.js すべてのReducerを1つに結合する役割
+count.js アプリケーションの事実上の状態を持つReducerを記述するファイル
+
+Store
+Storeを作成するための関数createStoreをインポート
+import { createStore } 'redux'
+
+作成したStoreを全Componentに渡すProviderをインポート
+import { Provider } from 'react-redux'
+
+stateとationの関連付けを行うconnect関数をインポート
+import { connect } from 'react-redux'
+
+dispatch
+あるアクションが発生したときに
+Reducerにtypeに応じた状態遷移を実行させるための関数
+
+
+Reactアプリケーション
+https://react-application-development.firebaseapp.com/
+
+Request Method: OPTIONS
+PUTメソッドが送信できるかどうかを確認
+Access-Control-Allow-Methods
+
+curl --request GET --url \
+'https://udemy-utils.herokuapp.com/api/v1/events?token=token123'
+
+'https://udemy-utils.herokuapp.com/api/v1/events/1?token=token123'
+
+登録
+curl --request POST \
+--url 'https://udemy-utils.herokuapp.com/api/v1/events?token=token123' \
+--header 'Content-Type: application/json' \
+--data '{
+  "title": "event 11",
+  "body": "body for event 11"
+}'
+
+更新
+curl --request PUT \
+--url 'https://udemy-utils.herokuapp.com/api/v1/events/1?token=token123' \
+--header 'Content-Type: application/json' \
+--data '{ "title": "changed title", "body": "changed body" }'
+
+削除
+curl --request DELETE \
+--url 'https://udemy-utils.herokuapp.com/api/v1/events/1?token=token123' \
+--header 'Content-Type: application/json'
+
+
+一覧画面作成
+外部のサーバーに対してHTTPのリクエストを送信するためのライブラリをインストール
+yarn add axios
+
+ReduxのAction Creator に非同期処理を実装するパッケージをインストール
+yarn add redux-thunk
+
+redux-thunk (ミドルウェア)
+https://github.com/reduxjs/redux-thunk
+action creator が action の代わりに関数を返すことができるようになる。
+内部の関数はパラメータとしてdispathとgetStateというstoreのメソッドを
+受け取ることができる。
+
+componentDidMount()
+Componentがマウント時に実行される
+
+■lodash
+配列のデータを編集するのが得意なパッケージ
+
+react-router-dom
+リンク機能を有するパッケージ
+yarn add react-router-dom
+
+redux-form
+https://redux-form.com/8.3.0/docs/gettingstarted.md/
+入力フォーム
+yarn add redux-form
+
+pristine 何も入力してない状態を示す属性
+submitting submitボタンが押されたらtrueになる
+
+enableReinitialize
+https://redux-form.com/6.0.0-rc.4/docs/api/reduxform.md/
+一覧画面から詳細画面に遷移するまでの間に別のユーザーにデータを書き換えられてしまう場合は、
+redux-formはそのデータを追従することはできない。
+明示的に追従するような実装にするにはenableReinitializeをtrueにする。
+デフォルトはfalse
+
+
+コミットをまとめる(push前)
+git log
+git rebase -i HEAD~2
+f e7fcb3de update
+git log
+git show 61d4cacc0ad29296d24b9cb5434819a2bb95dece
+
+
+redux-devtools-extension
+デバッグパッケージ
+yarn add redux-devtools-extension
+
+src/index.jsに設定
+import { composeWithDevTools } from 'redux-devtools-extension'
+
+Redux DevTools Chromeに追加
+https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd
+
+
+■Material-UI
+jQueryを使っていた頃のBootstrapようなもの
+Googleのほとんどのサービスに適用されてるデザイン
+Reactのコンポーネント
+
+Git Hubの検索画面
+https://github.com/search
+React Design で検索
+Sort を Most stars に変更（多くの人、多くのコミュニティで開発されてるもの）
+
+インストール（バージョン指定）
+yarn add material-ui@0.20.0
+
+Material-UIの使い方
+https://material-ui.com/getting-started/usage/
+https://v0.material-ui.com/v0.20.0/#/get-started/usage
+
+
+React Contex API
+Reactでは配下のコンポーネントにデータを渡す手段としてpropsという機能が提供されている。
+
+https://github.com/ProgrammingSamurai/react-recipes/tree/master/react-context-api
+このpropsを使用すると親コンポーネントから子コンポーネントへさらに孫コンポーネントいった具合に
+私たいコンポーネントまでバケツリレーのように渡していかなければならない弱点があった。
+→Prop drilling問題
+
+どのコンポーネントからでも特定のデータにアクセスできる仕組みがReact Reduxから提供されてる。
+→Providerコンポーネント
+Providerコンポーネントでラップしたすべてのコンポーネントに対して特定のデータを届けることを
+目的とするコンポーネント
+
+Reactモジュールはv16.3でほぼ同様のProviderというコンポーネントをリリースした。
+React側でリリースされたProviderを含むContext API
+
+
+Reactアプリケーション作成
+npm init react-app counter
+
+cd counter
+起動
+yarn start
+
+contextは別のcontextsディレクトリでこのアプリ専用のcontextを定義する
+Providerコンポーネントは何かをprovideすることができる。
+ラップされたcomsumerコンポーネント側で与えられたvalueを受け取って利用することができる。
+
+React ライフサイクルメソッド
+https://ja.reactjs.org/docs/react-component.html
+https://qiita.com/yukika/items/1859743921a10d7e3e6b
